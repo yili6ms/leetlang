@@ -148,7 +148,7 @@ defmodule AstDriver.Astdriver do
   def eval_expr({name, lval, {oper, _}, rval}, current_env)
       when name == :val_expr and
              oper == :div_sym do
-    eval_expr(lval, current_env) / eval_expr(rval, current_env)
+    div(eval_expr(lval, current_env), eval_expr(rval, current_env))
   end
 
   def eval_expr({name, term}, current_env) when name == :val_expr do
