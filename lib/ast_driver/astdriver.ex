@@ -44,6 +44,69 @@ defmodule AstDriver.Astdriver do
     Map.put(current_env, l_variant, r_expr)
   end
 
+  def eval_expr({name, expr_boolean}, current_env) when name == :val_expr_boolean do
+    eval_expr(expr_boolean, current_env)
+  end
+
+  def eval_expr({name, bool_expr}, current_env) when name == :bool_term do
+    eval_expr(bool_expr, current_env)
+  end
+
+  def eval_expr({name, bool_expr, _, ya_bool_expr}, current_env) when name == :bool_term do
+    eval_expr(bool_expr, current_env) or eval_expr(ya_bool_expr, current_env)
+  end
+
+  def eval_expr({name, bool_expr, _, ya_bool_expr}, current_env)
+      when name == :bool_factor_and do
+        eval_expr(bool_expr, current_env) and eval_expr(ya_bool_expr, current_env)
+  end
+
+  def eval_expr({name, val}, current_env) when name == :bool_factor do
+    eval_expr(val, current_env)
+  end
+
+  def eval_expr({name, oper, val}, current_env) when name == :bool_factor_not do
+    not eval_expr(val, current_env)
+  end
+
+  def eval_expr({name, _}, current_env) when name == :bool_factor_true do
+    true
+  end
+
+  def eval_expr({name, _}, current_env) when name == :bool_factor_false do
+    false
+  end
+
+  def eval_expr({name, lhs, {oper, _}, rhs}, current_env)
+      when name == :bool_factor and oper == :eq do
+    eval_expr(lhs, current_env) == eval_expr(rhs, current_env)
+  end
+
+  def eval_expr({name, lhs, {oper, _}, rhs}, current_env)
+      when name == :bool_factor and oper == :ne do
+    eval_expr(lhs, current_env) != eval_expr(rhs, current_env)
+  end
+
+  def eval_expr({name, lhs, {oper, _}, rhs}, current_env)
+      when name == :bool_factor and oper == :ge do
+    eval_expr(lhs, current_env) >= eval_expr(rhs, current_env)
+  end
+
+  def eval_expr({name, lhs, {oper, _}, rhs}, current_env)
+      when name == :bool_factor and oper == :le do
+    eval_expr(lhs, current_env) <= eval_expr(rhs, current_env)
+  end
+
+  def eval_expr({name, lhs, {oper, _}, rhs}, current_env)
+      when name == :bool_factor and oper == :gt do
+    eval_expr(lhs, current_env) > eval_expr(rhs, current_env)
+  end
+
+  def eval_expr({name, lhs, {oper, _}, rhs}, current_env)
+      when name == :bool_factor and oper == :lt do
+    eval_expr(lhs, current_env) < eval_expr(rhs, current_env)
+  end
+
   def eval_expr({name, val}, current_env) when name == :val_expr_digital do
     eval_expr(val, current_env)
   end

@@ -37,6 +37,9 @@ let : {token , {let_sym, TokenLine}}.
 program : {token , {program_sym, TokenLine}}.
 void : {token , {void_sym, TokenLine}}.
 int : {token , {int_sym, TokenLine}}.
+true : {token , {true_sym, TokenLine}}.
+false : {token , {false_sym, TokenLine}}.
+
 
 /:[a-zA-Z_]+ : {token, {atom, TokenLine, TokenChars}}.
 [0-9]+ : {token, {digital, TokenLine, list_to_integer(TokenChars)}}.
