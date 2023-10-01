@@ -40,6 +40,28 @@ defmodule LeetlangTest do
       let c = a * b -1
       let d = 1 + 2 * c
     }"
-    AstDriver.Astdriver.execute_program(input)
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert Map.get(env_map, "a") == 5
+    assert Map.get(env_map, "b") == 2
+    assert Map.get(env_map, "c") == 9
+    assert Map.get(env_map, "d") == 19
+  end
+
+  @tag :ast_driver_test
+  test "simple ast driver test2" do
+    input = ~c"program abc {
+      let a = 4 + 1
+      let b = 2 - 1 + 1
+      let c = a * (b -1)
+      let d = 1 + 2 * c
+      let e = (a + 5) * (b-2) - ((c-2) * (d+1) )
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert Map.get(env_map, "a") == 5
+    assert Map.get(env_map, "b") == 2
+    assert Map.get(env_map, "c") == 5
+    assert Map.get(env_map, "d") == 11
+    assert Map.get(env_map, "e") == -36
+
   end
 end
