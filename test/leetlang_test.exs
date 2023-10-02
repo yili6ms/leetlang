@@ -164,8 +164,8 @@ defmodule LeetlangTest do
   @tag :ast_driver_test_function
   test "simple ast driver test func01" do
     input = ~c"program abc {
-      let_fn func01 = (a -> int) -> int {
-        let c = a + 3
+      let_fn func01 = (a -> int b->int) -> int {
+        let c = a + b
         let d = func02.()
         return c + d
       }
@@ -182,15 +182,15 @@ defmodule LeetlangTest do
         return a + b
       }
       let x = 1
-      let y = 1
-      let z = 2
-      let aaa = func01.(x y)
+      let y = 2
+      let z = x + y
+      let aaa = func01.(x z)
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
     assert Map.get(env_map, "x") == 1
-    assert Map.get(env_map, "y") == 1
-    assert Map.get(env_map, "z") == 2
-    assert Map.get(env_map, "aaa") == 9
+    assert Map.get(env_map, "y") == 2
+    assert Map.get(env_map, "z") == 3
+    assert Map.get(env_map, "aaa") == 7
   end
 
   @tag :ast_driver_test_function_fib
@@ -210,6 +210,6 @@ defmodule LeetlangTest do
 
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
-    |> IO.inspect()
+    assert Map.get(env_map, "ans") == 55
   end
 end
