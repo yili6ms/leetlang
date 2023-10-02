@@ -44,6 +44,26 @@ defmodule AstDriver.Astdriver do
     Map.put(current_env, l_variant, r_expr)
   end
 
+  def execute_ast({name, condition_expr, true_body, false_body}, current_env)
+      when name == :stmt_if_else do
+    with true <- eval_expr(condition_expr, current_env) do
+      execute_ast(true_body, current_env)
+    else
+      _ -> execute_ast(false_body, current_env)
+    end
+  end
+
+  def execute_ast({name, condition_expr, true_body}, current_env) when name == :stmt_if do
+    with true <- eval_expr(condition_expr, current_env) do
+      execute_ast(true_body, current_env)
+    end
+  end
+
+  def execute_ast({name, condition_expr, exec_body}, current_env) when name == :stmt_while do
+    new_env = process_while(name, condition_expr, exec_body, current_env)
+    new_env |> IO.inspect()
+  end
+
   def eval_expr({name, expr_boolean}, current_env) when name == :val_expr_boolean do
     eval_expr(expr_boolean, current_env)
   end
@@ -58,7 +78,7 @@ defmodule AstDriver.Astdriver do
 
   def eval_expr({name, bool_expr, _, ya_bool_expr}, current_env)
       when name == :bool_factor_and do
-        eval_expr(bool_expr, current_env) and eval_expr(ya_bool_expr, current_env)
+    eval_expr(bool_expr, current_env) and eval_expr(ya_bool_expr, current_env)
   end
 
   def eval_expr({name, val}, current_env) when name == :bool_factor do
@@ -178,6 +198,15 @@ defmodule AstDriver.Astdriver do
 
   def eval_str({name, tl, value}, current_env) when name == :chars do
     value |> to_string()
+  end
+
+  defp process_while(name, condition_expr, exec_body, current_env) do
+    with true <- eval_expr(condition_expr, current_env) do
+      new_env = execute_ast(exec_body, current_env)
+      process_while(name, condition_expr, exec_body, new_env)
+    else
+      _ -> current_env
+    end
   end
 
   def execute_ast(rest, current_env) do

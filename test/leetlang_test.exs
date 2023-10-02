@@ -85,11 +85,71 @@ defmodule LeetlangTest do
       let c = a + b
       let d = c *2  == ( a + b ) * 2
       let e = f
+      let xx =  a == b || (a != b  && a == 2)
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
     assert Map.get(env_map, "a") == 1
     assert Map.get(env_map, "b") == 2
     assert Map.get(env_map, "c") == 3
     assert Map.get(env_map, "d") == true
+  end
+
+  @tag :ast_driver_test_if
+  test "simple ast driver test if" do
+    input = ~c"program abc {
+      let a = 1
+      let b = 2
+      if (a > b)
+      {
+        let c = 3
+      }
+      else
+      {
+        let d = 4
+        let a = 10
+      }
+
+      let a1 = 2
+      let b2 = 3
+      if (a1 < b2)
+      {
+        let c1 = 10
+        if (a > b) {
+          let d1 = 4
+        }
+        else
+          {
+            let d1 = 5
+          }
+      }
+
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert Map.get(env_map, "a") == 10
+    assert Map.get(env_map, "b") == 2
+    assert Map.get(env_map, "c") == nil
+    assert Map.get(env_map, "d") == 4
+    assert Map.get(env_map, "a1") == 2
+    assert Map.get(env_map, "b2") == 3
+    assert Map.get(env_map, "c1") == 10
+    assert Map.get(env_map, "d1") == 4
+  end
+
+  @tag :ast_driver_test_while
+  test "simple ast driver test while" do
+    input = ~c"program abc {
+      let a = 1
+      let b = 2
+      let cnt = 0
+      while (a<3)
+      {
+        let a = a + 1
+        let cnt = cnt + a
+      }
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert Map.get(env_map, "a") == 3
+    assert Map.get(env_map, "b") == 2
+    assert Map.get(env_map, "cnt") == 5
   end
 end

@@ -19,6 +19,12 @@ ProgramLines -> ProgramLine : {'program_lines', '$1'}.
 
 ProgramLine -> Let_stmt : {'program_line', '$1'}.
 
+ProgramLine -> if_sym '(' BoolExpr ')' '{' ProgramLines '}' else_sym '{' ProgramLines '}' : {'stmt_if_else', '$3', '$6', '$10'}.
+
+ProgramLine -> if_sym '(' BoolExpr ')' '{' ProgramLines '}' : {'stmt_if', '$3', '$6'}.
+
+ProgramLine -> while_sym '(' BoolExpr ')' '{' ProgramLines '}' : {'stmt_while', '$3', '$6'}.
+
 Let_stmt -> let_sym chars assign Val_expr_all : {'let_stmt', '$2', '$4'}.
 
 Variant -> chars : {'val_expr_chars', '$1'}.
