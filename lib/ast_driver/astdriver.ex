@@ -245,22 +245,29 @@ defmodule AstDriver.Astdriver do
   end
 
   def eval_func({name, form_list, ret_type, ret_stmt}, arity, current_env) when name == :func_def1 do
-    IO.inspect("evaluating function def1")
-    IO.inspect(form_list)
+    new_env = form_list
+    |> extract_para
+    |> Enum.zip(arity)
+    |> Enum.reduce(%{}, fn({k,v}, acc) -> Map.put(acc, k, v) end)
+    new_env2 = Map.merge(current_env, new_env)
+    eval_expr(ret_stmt, new_env2)
+
   end
 
   def eval_func({name, form_list, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def2 do
-    IO.inspect("evaluating function def2")
-    IO.inspect(form_list)
+    new_env = form_list
+    |> extract_para
+    |> Enum.zip(arity)
+    |> Enum.reduce(%{}, fn({k,v}, acc) -> Map.put(acc, k, v) end)
+    new_env3 = execute_ast(func_lines, Map.merge(current_env, new_env))
+    eval_expr(ret_stmt, new_env3)
   end
 
   def eval_func({name, ret_type, ret_stmt}, arity, current_env) when name == :func_def_no_parm1 do
-    IO.inspect("evaluating function no parm def1")
     eval_expr(ret_stmt, current_env)
   end
 
   def eval_func({name, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def_no_parm2 do
-    IO.inspect("evaluating function no parm def2")
     new_env = execute_ast(func_lines, current_env)
     eval_expr(ret_stmt, new_env)
   end
@@ -281,6 +288,27 @@ defmodule AstDriver.Astdriver do
       _ -> current_env
     end
   end
+
+  def extract_para(form_list) do
+    get_fname_para(form_list) |>
+    Enum.map(& extract_func_para/1) |> Enum.map(& to_string(&1))
+  end
+
+  defp get_fname_para({name, para}) when name == :para_list do
+    para
+  end
+
+  defp get_fname_para({name, para, paras}) when name == :para_list do
+    [para] ++ [get_fname_para(paras)]
+  end
+
+  defp extract_func_para(param) do
+    {_, {_, {_,_, name}}, _} = param
+    name
+  end
+
+
+
 
   def execute_ast(rest, current_env) do
     IO.inspect("unknown")

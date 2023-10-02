@@ -166,7 +166,8 @@ defmodule LeetlangTest do
     input = ~c"program abc {
       let_fn func01 = (a -> int b ->int) -> int {
         let c = a + b
-        return c
+        let d = func02.()
+        return c + d
       }
 
       let_fn func02 = () -> int {
@@ -183,10 +184,13 @@ defmodule LeetlangTest do
       let x = 1
       let y = 2
       let z = x + y
-      let aaa = func03.()
+      let aaa = func01.(x y)
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
-
+    assert Map.get(env_map, "x") == 1
+    assert Map.get(env_map, "y") == 2
+    assert Map.get(env_map, "z") == 3
+    assert Map.get(env_map, "aaa") == 6
 
   end
 end
