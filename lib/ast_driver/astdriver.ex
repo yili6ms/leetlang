@@ -74,12 +74,13 @@ defmodule AstDriver.Astdriver do
   def execute_ast({name, condition_expr, true_body}, current_env) when name == :stmt_if do
     with true <- eval_expr(condition_expr, current_env) do
       execute_ast(true_body, current_env)
+    else
+      _ -> current_env
     end
   end
 
   def execute_ast({name, condition_expr, exec_body}, current_env) when name == :stmt_while do
     new_env = process_while(name, condition_expr, exec_body, current_env)
-    new_env |> IO.inspect()
   end
 
   def eval_expr({name, func}, current_env) when name == :val_expr_func do
@@ -98,8 +99,10 @@ defmodule AstDriver.Astdriver do
   def eval_expr({name, func_name, para_list}, current_env) when name == :val_expr_func_with_parm do
     arity = eval_expr(para_list, current_env)
     body = Map.fetch!(current_env, eval_str(func_name, current_env))
-    eval_func(body, arity, current_env)
+    eval_func(body, wrap_arity(arity), current_env)
   end
+
+
 
   def eval_expr({name, parm}, current_env) when name == :call_param_list do
     eval_expr(parm, current_env)
@@ -260,6 +263,7 @@ defmodule AstDriver.Astdriver do
     |> Enum.zip(arity)
     |> Enum.reduce(%{}, fn({k,v}, acc) -> Map.put(acc, k, v) end)
     new_env3 = execute_ast(func_lines, Map.merge(current_env, new_env))
+    IO.inspect(new_env3)
     eval_expr(ret_stmt, new_env3)
   end
 
@@ -269,9 +273,17 @@ defmodule AstDriver.Astdriver do
 
   def eval_func({name, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def_no_parm2 do
     new_env = execute_ast(func_lines, current_env)
+    IO.inspect(new_env)
     eval_expr(ret_stmt, new_env)
   end
 
+  @spec eval_str(
+          {:prg_name,
+           {:prg_name, {:prg_name, {any, any} | {any, any, any}} | {:chars, any, any}}
+           | {:chars, any, any}}
+          | {:chars, any, any},
+          any
+        ) :: binary
   def eval_str({name, value}, current_env) when name == :prg_name do
     eval_str(value, current_env)
   end
@@ -295,16 +307,24 @@ defmodule AstDriver.Astdriver do
   end
 
   defp get_fname_para({name, para}) when name == :para_list do
-    para
+    [para]
   end
 
   defp get_fname_para({name, para, paras}) when name == :para_list do
-    [para] ++ [get_fname_para(paras)]
+    [para] ++ get_fname_para(paras)
   end
 
   defp extract_func_para(param) do
     {_, {_, {_,_, name}}, _} = param
     name
+  end
+
+  defp wrap_arity(arity) do
+    if is_list(arity) do
+      arity
+    else
+      [arity]
+    end
   end
 
 
