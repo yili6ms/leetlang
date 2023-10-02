@@ -22,6 +22,8 @@ Rules.
 \( : {token, {'(', TokenLine}}.
 \) : {token, {')', TokenLine}}.
 
+\. : {token, {dot_call, TokenLine }}.
+
 \&& : {token, {and_sym, TokenLine }}.
 \|\| : {token, {or_sym, TokenLine }}.
 \! : {token, {not_sym, TokenLine }}.
@@ -29,14 +31,18 @@ Rules.
 \- : {token, {minus_sym, TokenLine }}.
 \* : {token, {mult_sym, TokenLine }}.
 \/ : {token, {div_sym, TokenLine }}.
+\-> : {token, {arrow_sym, TokenLine }}.
 
 if : {token, {if_sym, TokenLine}}.
 else : {token, {else_sym, TokenLine}}.
 while : {token, {while_sym, TokenLine}}.
 let : {token , {let_sym, TokenLine}}.
 program : {token , {program_sym, TokenLine}}.
+let_fn : {token , {let_fn_sym, TokenLine}}.
 void : {token , {void_sym, TokenLine}}.
+return : {token , {return_sym, TokenLine}}.
 int : {token , {int_sym, TokenLine}}.
+bool : {token , {bool_sym, TokenLine}}.
 true : {token , {true_sym, TokenLine}}.
 false : {token , {false_sym, TokenLine}}.
 

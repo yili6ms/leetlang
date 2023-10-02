@@ -38,10 +38,28 @@ defmodule AstDriver.Astdriver do
     execute_ast(let_stmt, current_env)
   end
 
+  def execute_ast({name, func_line, func_lines}, current_env) when name == :func_lines do
+    env1 = execute_ast(func_line, current_env)
+    execute_ast(func_lines, env1)
+  end
+
+  def execute_ast({name, func_line}, current_env) when name == :func_lines do
+    execute_ast(func_line, current_env)
+  end
+
+  def execute_ast({name, let_stmt}, current_env) when name == :func_line do
+    execute_ast(let_stmt, current_env)
+  end
+
   def execute_ast({name, lhs, rhs}, current_env) when name == :let_stmt do
     l_variant = eval_str(lhs, current_env)
     r_expr = eval_expr(rhs, current_env)
     Map.put(current_env, l_variant, r_expr)
+  end
+
+  def execute_ast({name, funcname, funcdef}, current_env) when name == :let_fn_stmt do
+    l_variant = eval_str(funcname, current_env)
+    Map.put(current_env, l_variant, funcdef)
   end
 
   def execute_ast({name, condition_expr, true_body, false_body}, current_env)
@@ -63,6 +81,40 @@ defmodule AstDriver.Astdriver do
     new_env = process_while(name, condition_expr, exec_body, current_env)
     new_env |> IO.inspect()
   end
+
+  def eval_expr({name, func}, current_env) when name == :val_expr_func do
+    eval_expr(func, current_env)
+  end
+
+  def eval_expr({name, ret_val}, current_env) when name == :ret_stmt do
+    eval_expr(ret_val, current_env)
+  end
+
+  def eval_expr({name, func_name}, current_env) when name == :val_expr_func_wo_parm do
+    body = Map.fetch!(current_env, eval_str(func_name, current_env))
+    eval_func(body, [], current_env)
+  end
+
+  def eval_expr({name, func_name, para_list}, current_env) when name == :val_expr_func_with_parm do
+    arity = eval_expr(para_list, current_env)
+    body = Map.fetch!(current_env, eval_str(func_name, current_env))
+    eval_func(body, arity, current_env)
+  end
+
+  def eval_expr({name, parm}, current_env) when name == :call_param_list do
+    eval_expr(parm, current_env)
+  end
+
+  def eval_expr({name, parm, parmlist}, current_env) when name == :call_param_list do
+    [eval_expr(parm, current_env)] ++ [eval_expr(parmlist, current_env)]
+  end
+
+  def eval_expr({name, parm}, current_env) when name == :call_param do
+    eval_expr(parm, current_env)
+  end
+
+
+
 
   def eval_expr({name, expr_boolean}, current_env) when name == :val_expr_boolean do
     eval_expr(expr_boolean, current_env)
@@ -144,7 +196,7 @@ defmodule AstDriver.Astdriver do
   end
 
   def eval_expr({name, id}, current_env) when name == :val_expr_chars do
-    Map.get(current_env, eval_str(id, current_env))
+    Map.fetch!(current_env, eval_str(id, current_env))
   end
 
   def eval_expr({name, lval, {oper, _}, rval}, current_env)
@@ -190,6 +242,27 @@ defmodule AstDriver.Astdriver do
   def eval_expr(rest, current_env) do
     IO.inspect("unknown")
     IO.inspect(rest)
+  end
+
+  def eval_func({name, form_list, ret_type, ret_stmt}, arity, current_env) when name == :func_def1 do
+    IO.inspect("evaluating function def1")
+    IO.inspect(form_list)
+  end
+
+  def eval_func({name, form_list, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def2 do
+    IO.inspect("evaluating function def2")
+    IO.inspect(form_list)
+  end
+
+  def eval_func({name, ret_type, ret_stmt}, arity, current_env) when name == :func_def_no_parm1 do
+    IO.inspect("evaluating function no parm def1")
+    eval_expr(ret_stmt, current_env)
+  end
+
+  def eval_func({name, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def_no_parm2 do
+    IO.inspect("evaluating function no parm def2")
+    new_env = execute_ast(func_lines, current_env)
+    eval_expr(ret_stmt, new_env)
   end
 
   def eval_str({name, value}, current_env) when name == :prg_name do

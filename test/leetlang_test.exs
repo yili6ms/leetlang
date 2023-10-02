@@ -84,7 +84,6 @@ defmodule LeetlangTest do
       let b = 2
       let c = a + b
       let d = c *2  == ( a + b ) * 2
-      let e = f
       let xx =  a == b || (a != b  && a == 2)
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
@@ -143,13 +142,51 @@ defmodule LeetlangTest do
       let cnt = 0
       while (a<3)
       {
-        let a = a + 1
-        let cnt = cnt + a
+        if (a == 1)
+        {
+          let a = a + 1
+          let cnt = cnt + a
+        }
+        else
+        {
+          let a = a + 10
+          let cnt = cnt + a
+        }
+
       }
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
-    assert Map.get(env_map, "a") == 3
+    assert Map.get(env_map, "a") == 12
     assert Map.get(env_map, "b") == 2
-    assert Map.get(env_map, "cnt") == 5
+    assert Map.get(env_map, "cnt") == 14
+  end
+
+  @tag :ast_driver_test_function
+  test "simple ast driver test func01" do
+    input = ~c"program abc {
+      let_fn func01 = (a -> int b ->int) -> int {
+        let c = a + b
+        return c
+      }
+
+      let_fn func02 = () -> int {
+        let a = 1
+        let b = 2
+        return a + b
+      }
+
+      let_fn func03 = () -> int{
+        let a = func02.()
+        let b = 1
+        return a + b
+      }
+      let x = 1
+      let y = 2
+      let z = x + y
+      let aaa = func03.()
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input)
+
+
   end
 end
