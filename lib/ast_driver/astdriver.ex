@@ -86,6 +86,7 @@ defmodule AstDriver.Astdriver do
 
   def execute_ast({name, condition_expr, exec_body}, current_env) when name == :stmt_while do
     new_env = process_while(name, condition_expr, exec_body, current_env)
+    new_env
   end
 
   def eval_expr({name, func}, current_env) when name == :val_expr_func do
@@ -101,13 +102,12 @@ defmodule AstDriver.Astdriver do
     eval_func(body, [], current_env)
   end
 
-  def eval_expr({name, func_name, para_list}, current_env) when name == :val_expr_func_with_parm do
+  def eval_expr({name, func_name, para_list}, current_env)
+      when name == :val_expr_func_with_parm do
     arity = eval_expr(para_list, current_env)
     body = Map.fetch!(current_env, eval_str(func_name, current_env))
     eval_func(body, wrap_arity(arity), current_env)
   end
-
-
 
   def eval_expr({name, parm}, current_env) when name == :call_param_list do
     eval_expr(parm, current_env)
@@ -120,9 +120,6 @@ defmodule AstDriver.Astdriver do
   def eval_expr({name, parm}, current_env) when name == :call_param do
     eval_expr(parm, current_env)
   end
-
-
-
 
   def eval_expr({name, expr_boolean}, current_env) when name == :val_expr_boolean do
     eval_expr(expr_boolean, current_env)
@@ -247,26 +244,67 @@ defmodule AstDriver.Astdriver do
     eval_expr(val, current_env)
   end
 
+  def eval_expr({name, val}, current_env) when name == :val_expr_arr do
+    eval_expr(val, current_env)
+  end
+
+  def eval_expr({name}, current_env) when name == :arr_expr_empty do
+    []
+  end
+
+  def eval_expr({name, val}, current_env) when name == :arr_expr do
+    eval_expr(val, current_env)
+  end
+
+  def eval_expr({name, val}, current_env) when name == :arr_elem do
+    eval_expr(val, current_env)
+  end
+
+  def eval_expr({name, val}, current_env) when name == :arr_list do
+    [eval_expr(val, current_env)]
+  end
+
+  def eval_expr({name, val, rest}, current_env) when name == :arr_list do
+    [eval_expr(val, current_env)] ++ eval_expr(rest, current_env)
+  end
+
+  def eval_expr({name, left_expr, right_expr}, current_env) when name == :arr_expr_add do
+    eval_expr(left_expr, current_env) ++ eval_expr(right_expr, current_env)
+  end
+
+  def eval_expr({name, left_expr, right_expr}, current_env) when name == :arr_expr_sub do
+    eval_expr(left_expr, current_env) -- eval_expr(right_expr, current_env)
+  end
+
+  def eval_expr({name, val}, current_env) when name == :arr_expr_chars do
+    Map.fetch!(current_env, eval_str(val, current_env))
+  end
+
   def eval_expr(rest, current_env) do
     IO.inspect("unknown")
     IO.inspect(rest)
   end
 
-  def eval_func({name, form_list, ret_type, ret_stmt}, arity, current_env) when name == :func_def1 do
-    new_env = form_list
-    |> extract_para
-    |> Enum.zip(arity)
-    |> Enum.reduce(%{}, fn({k,v}, acc) -> Map.put(acc, k, v) end)
+  def eval_func({name, form_list, ret_type, ret_stmt}, arity, current_env)
+      when name == :func_def1 do
+    new_env =
+      form_list
+      |> extract_para
+      |> Enum.zip(arity)
+      |> Enum.reduce(%{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
+
     new_env2 = Map.merge(current_env, new_env)
     eval_expr(ret_stmt, new_env2)
-
   end
 
-  def eval_func({name, form_list, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def2 do
-    new_env = form_list
-    |> extract_para
-    |> Enum.zip(arity)
-    |> Enum.reduce(%{}, fn({k,v}, acc) -> Map.put(acc, k, v) end)
+  def eval_func({name, form_list, ret_type, func_lines, ret_stmt}, arity, current_env)
+      when name == :func_def2 do
+    new_env =
+      form_list
+      |> extract_para
+      |> Enum.zip(arity)
+      |> Enum.reduce(%{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
+
     new_env3 = execute_ast(func_lines, Map.merge(current_env, new_env))
     IO.inspect(new_env3)
     eval_expr(ret_stmt, new_env3)
@@ -276,7 +314,8 @@ defmodule AstDriver.Astdriver do
     eval_expr(ret_stmt, current_env)
   end
 
-  def eval_func({name, ret_type, func_lines, ret_stmt}, arity, current_env) when name == :func_def_no_parm2 do
+  def eval_func({name, ret_type, func_lines, ret_stmt}, arity, current_env)
+      when name == :func_def_no_parm2 do
     new_env = execute_ast(func_lines, current_env)
     IO.inspect(new_env)
     eval_expr(ret_stmt, new_env)
@@ -307,8 +346,7 @@ defmodule AstDriver.Astdriver do
   end
 
   def extract_para(form_list) do
-    get_fname_para(form_list) |>
-    Enum.map(& extract_func_para/1) |> Enum.map(& to_string(&1))
+    get_fname_para(form_list) |> Enum.map(&extract_func_para/1) |> Enum.map(&to_string(&1))
   end
 
   defp get_fname_para({name, para}) when name == :para_list do
@@ -320,7 +358,7 @@ defmodule AstDriver.Astdriver do
   end
 
   defp extract_func_para(param) do
-    {_, {_, {_,_, name}}, _} = param
+    {_, {_, {_, _, name}}, _} = param
     name
   end
 
@@ -331,9 +369,6 @@ defmodule AstDriver.Astdriver do
       [arity]
     end
   end
-
-
-
 
   def execute_ast(rest, current_env) do
     IO.inspect("unknown")

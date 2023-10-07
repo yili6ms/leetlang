@@ -1,10 +1,10 @@
 Nonterminals Program Prg_name ProgramBody ProgramLines ProgramLine Let_stmt Val_expr FuncLine FuncLines
-Val_expr_all FuncReturn RetStmt Call_ParamList Call_Param Val_expr1 Val_expr2 Variant Term Factor BoolExpr BoolTerm BoolFactor CmpExpr Func_def Let_fn_stmt ParaList RetType Param Formalization Type. 
+Val_expr_all Arr_add_stmt Arr_sub_stmt Arr_expr Arr_list Arr_elem FuncReturn RetStmt Call_ParamList Call_Param Val_expr1 Val_expr2 Variant Term Factor BoolExpr BoolTerm BoolFactor CmpExpr Func_def Let_fn_stmt ParaList RetType Param Formalization Type. 
 
-Terminals eq  ne  assign  ge  le  gt  lt  '{'  '}'  '('  ')'  
+Terminals eq  ne  assign  ge  le  gt  lt  '{'  '}'  '('  ')' '[' ']'
 and_sym  or_sym  not_sym fn_sym plus_sym  minus_sym  mult_sym  div_sym arrow_sym 
-if_sym  else_sym  while_sym  let_sym  return_sym let_fn_sym program_sym  void_sym  int_sym bool_sym atom  digital  chars
-true_sym false_sym dot_call.
+if_sym  else_sym  while_sym  let_sym  return_sym let_fn_sym program_sym void_sym  int_sym bool_sym atom  digital  chars
+true_sym false_sym dot_call comma arr_add_sym arr_sub_sym colon_sym.
 
 Rootsymbol Program.
 
@@ -40,6 +40,7 @@ Func_def -> '(' ')' arrow_sym RetType '{' FuncLines RetStmt '}' : {'func_def_no_
 Func_def -> '(' ')' arrow_sym RetType '{' RetStmt '}' : {'func_def_no_parm1', '$4', '$6'}.
 
 
+
 RetStmt -> return_sym Val_expr_all : {'ret_stmt', '$2'}.
 
 FuncLines -> FuncLine FuncLines : {'func_lines', '$1', '$2'}.
@@ -50,6 +51,8 @@ FuncLine -> Let_stmt : {'func_line', '$1'}.
 FuncLine -> if_sym '(' BoolExpr ')' '{' FuncLines '}' else_sym '{' FuncLines '}' : {'stmt_if_else', '$3', '$6', '$10'}.
 FuncLine -> if_sym '(' BoolExpr ')' '{' FuncLines '}' : {'stmt_if', '$3', '$6'}.
 FuncLine -> while_sym '(' BoolExpr ')' '{' FuncLines '}' : {'stmt_while', '$3', '$6'}.
+
+
 
 ParaList -> Param : {'para_list', '$1'}.
 ParaList -> Param  ParaList : {'para_list', '$1', '$2'}.
@@ -65,9 +68,22 @@ RetType -> Type : {'ret_type', '$1'}.
 
 Variant -> chars : {'val_expr_chars', '$1'}.
 
+Arr_expr -> '[' ']': {'arr_expr_empty' }.
+Arr_expr -> '[' Arr_list ']': {'arr_expr', '$2'}.
+Arr_expr -> colon_sym chars : {'arr_expr_chars', '$2'}.
+Arr_elem -> Val_expr_all : {'arr_elem', '$1'}.
+
+Arr_list -> Arr_elem : {'arr_list', '$1'}.
+Arr_list -> Arr_elem comma Arr_list : {'arr_list', '$1', '$3'}.
+
+Arr_expr -> Arr_expr arr_add_sym Arr_expr : {'arr_expr_add', '$1', '$3'}.
+Arr_expr -> Arr_expr arr_sub_sym Arr_expr : {'arr_expr_sub', '$1', '$3'}.
+
+
 Val_expr_all -> Val_expr : {'val_expr', '$1'}.
 Val_expr_all -> BoolExpr : {'val_expr_boolean', '$1'}.
 Val_expr_all -> FuncReturn : {'val_expr_func', '$1'}.
+Val_expr_all -> Arr_expr : {'val_expr_arr', '$1'}.
 
 FuncReturn -> chars dot_call '(' Call_ParamList ')' : {'val_expr_func_with_parm', '$1', '$4'}.
 FuncReturn -> chars dot_call '(' ')' : {'val_expr_func_wo_parm', '$1'}.

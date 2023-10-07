@@ -22,7 +22,11 @@ Rules.
 \( : {token, {'(', TokenLine}}.
 \) : {token, {')', TokenLine}}.
 
+\[ : {token, {'[', TokenLine}}.
+\] : {token, {']', TokenLine}}.
+
 \. : {token, {dot_call, TokenLine }}.
+\, : {token, {comma, TokenLine }}.
 
 \&& : {token, {and_sym, TokenLine }}.
 \|\| : {token, {or_sym, TokenLine }}.
@@ -32,6 +36,9 @@ Rules.
 \* : {token, {mult_sym, TokenLine }}.
 \/ : {token, {div_sym, TokenLine }}.
 \-> : {token, {arrow_sym, TokenLine }}.
+\++ : {token, {arr_add_sym, TokenLine }}.
+\-- : {token, {arr_sub_sym, TokenLine }}.
+\: : {token, {colon_sym, TokenLine }}.
 
 if : {token, {if_sym, TokenLine}}.
 else : {token, {else_sym, TokenLine}}.

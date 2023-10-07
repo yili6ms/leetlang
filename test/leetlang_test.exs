@@ -242,9 +242,32 @@ defmodule LeetlangTest do
       let a = a + b
       let a = true
       return a
-
     }"
     env_map = AstDriver.Astdriver.execute_program(input)
     assert env_map == true
+  end
+
+  @tag :ast_driver_test_array
+  test "simple ast driver test array" do
+    input = ~c"program abc {
+      let a = [1,2,3] ++ [4,5,6]
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input) |> IO.inspect()
+  end
+
+  @tag :ast_driver_test_array2
+  test "simple ast driver test array2" do
+    input = ~c"program abc {
+      let a = []
+      let cnt = 0
+      let b = []
+      while (cnt < 10)
+      {
+        let cnt = cnt + 1
+        let b = :b ++ [cnt]
+      }
+      return b
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input) |> IO.inspect()
   end
 end
