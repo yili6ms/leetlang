@@ -258,15 +258,23 @@ defmodule LeetlangTest do
   @tag :ast_driver_test_array2
   test "simple ast driver test array2" do
     input = ~c"program abc {
+      let_fn fib = (n -> int) -> int {
+        let c = 1
+        if (n >= 3) {
+          let a =  fib.(n-1)
+          let b = fib.(n-2)
+          let c = a + b
+        }
+        return c
+      }
       let a = []
       let cnt = 0
-      let b = []
       while (cnt < 10)
       {
         let cnt = cnt + 1
-        let b = :b ++ [cnt]
+        let a = :a ++ [fib.(cnt)]
       }
-      return b
+      return a
     }"
     env_map = AstDriver.Astdriver.execute_program(input) |> IO.inspect()
   end
