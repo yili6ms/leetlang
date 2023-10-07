@@ -32,6 +32,11 @@ program abc
 }
 ```
 
+```
+Output: 55
+```
+
+
 ```leetlang
 program abc
 {
@@ -53,6 +58,9 @@ program abc
   }
   return a
 }
+```
+```
+Output: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 ```
 
 ## Installation
