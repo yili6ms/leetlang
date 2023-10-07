@@ -25,6 +25,11 @@ defmodule AstDriver.Astdriver do
     execute_ast(program_body, current_env)
   end
 
+  def execute_ast({name, program_body, ret_stmt}, current_env) when name == :program_body do
+    cur_env = execute_ast(program_body, current_env)
+    eval_expr(ret_stmt, cur_env)
+  end
+
   def execute_ast({name, program_line, program_lines}, current_env) when name == :program_lines do
     env1 = execute_ast(program_line, current_env)
     execute_ast(program_lines, env1)

@@ -1,7 +1,7 @@
 -module(leetlang_parser).
 -export([parse/1, parse_and_scan/1, format_error/1]).
 
--file("/opt/homebrew/Cellar/erlang/26.0.2/lib/erlang/lib/parsetools-2.5/include/yeccpre.hrl", 0).
+-file("c:/Program Files/Erlang OTP/lib/parsetools-2.5/include/yeccpre.hrl", 0).
 %%
 %% %CopyrightBegin%
 %%
@@ -474,6 +474,8 @@ yeccpars2(143=S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_143(S, Cat, Ss, Stack, T, Ts, Tzr);
 %% yeccpars2(144=S, Cat, Ss, Stack, T, Ts, Tzr) ->
 %%  yeccpars2_144(S, Cat, Ss, Stack, T, Ts, Tzr);
+%% yeccpars2(145=S, Cat, Ss, Stack, T, Ts, Tzr) ->
+%%  yeccpars2_145(S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccpars2(Other, _, _, _, _, _, _) ->
  erlang:error({yecc_bug,"1.4",{missing_state_in_action_table, Other}}).
 
@@ -526,6 +528,8 @@ yeccpars2_5(_, _, _, _, T, _, _) ->
 
 -dialyzer({nowarn_function, yeccpars2_6/7}).
 -compile({nowarn_unused_function,  yeccpars2_6/7}).
+yeccpars2_6(S, 'return_sym', Ss, Stack, T, Ts, Tzr) ->
+ yeccpars1(S, 116, Ss, Stack, T, Ts, Tzr);
 yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_6_(Stack),
  yeccgoto_ProgramBody(hd(Ss), Cat, Ss, NewStack, T, Ts, Tzr).
@@ -1483,6 +1487,13 @@ yeccpars2_144(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  NewStack = yeccpars2_144_(Stack),
  yeccgoto_ProgramLines(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
 
+-dialyzer({nowarn_function, yeccpars2_145/7}).
+-compile({nowarn_unused_function,  yeccpars2_145/7}).
+yeccpars2_145(_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ [_|Nss] = Ss,
+ NewStack = yeccpars2_145_(Stack),
+ yeccgoto_ProgramBody(hd(Nss), Cat, Nss, NewStack, T, Ts, Tzr).
+
 -dialyzer({nowarn_function, yeccgoto_BoolExpr/7}).
 -compile({nowarn_unused_function,  yeccgoto_BoolExpr/7}).
 yeccgoto_BoolExpr(15, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -1752,13 +1763,15 @@ yeccgoto_ProgramLine(7, Cat, Ss, Stack, T, Ts, Tzr) ->
 
 -dialyzer({nowarn_function, yeccgoto_ProgramLines/7}).
 -compile({nowarn_unused_function,  yeccgoto_ProgramLines/7}).
-yeccgoto_ProgramLines(5=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
- yeccpars2_6(_S, Cat, Ss, Stack, T, Ts, Tzr);
+yeccgoto_ProgramLines(5, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_6(6, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_ProgramLines(7=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_144(_S, Cat, Ss, Stack, T, Ts, Tzr).
 
 -dialyzer({nowarn_function, yeccgoto_RetStmt/7}).
 -compile({nowarn_unused_function,  yeccgoto_RetStmt/7}).
+yeccgoto_RetStmt(6=_S, Cat, Ss, Stack, T, Ts, Tzr) ->
+ yeccpars2_145(_S, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_RetStmt(113, Cat, Ss, Stack, T, Ts, Tzr) ->
  yeccpars2_114(114, Cat, Ss, Stack, T, Ts, Tzr);
 yeccgoto_RetStmt(115, Cat, Ss, Stack, T, Ts, Tzr) ->
@@ -1898,13 +1911,13 @@ yeccpars2_4_(__Stack0) ->
 yeccpars2_6_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
-                              {'program_body', ___1}
+                               {'program_body', ___1}
   end | __Stack].
 
 -compile({inline,yeccpars2_7_/1}).
 -dialyzer({nowarn_function, yeccpars2_7_/1}).
 -compile({nowarn_unused_function,  yeccpars2_7_/1}).
--file("src/leetlang_parser.yrl", 15).
+-file("src/leetlang_parser.yrl", 17).
 yeccpars2_7_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1914,7 +1927,7 @@ yeccpars2_7_(__Stack0) ->
 -compile({inline,yeccpars2_9_/1}).
 -dialyzer({nowarn_function, yeccpars2_9_/1}).
 -compile({nowarn_unused_function,  yeccpars2_9_/1}).
--file("src/leetlang_parser.yrl", 17).
+-file("src/leetlang_parser.yrl", 19).
 yeccpars2_9_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1924,7 +1937,7 @@ yeccpars2_9_(__Stack0) ->
 -compile({inline,yeccpars2_10_/1}).
 -dialyzer({nowarn_function, yeccpars2_10_/1}).
 -compile({nowarn_unused_function,  yeccpars2_10_/1}).
--file("src/leetlang_parser.yrl", 19).
+-file("src/leetlang_parser.yrl", 21).
 yeccpars2_10_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1934,7 +1947,7 @@ yeccpars2_10_(__Stack0) ->
 -compile({inline,yeccpars2_17_/1}).
 -dialyzer({nowarn_function, yeccpars2_17_/1}).
 -compile({nowarn_unused_function,  yeccpars2_17_/1}).
--file("src/leetlang_parser.yrl", 74).
+-file("src/leetlang_parser.yrl", 77).
 yeccpars2_17_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1944,7 +1957,7 @@ yeccpars2_17_(__Stack0) ->
 -compile({inline,yeccpars2_18_/1}).
 -dialyzer({nowarn_function, yeccpars2_18_/1}).
 -compile({nowarn_unused_function,  yeccpars2_18_/1}).
--file("src/leetlang_parser.yrl", 78).
+-file("src/leetlang_parser.yrl", 81).
 yeccpars2_18_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1954,7 +1967,7 @@ yeccpars2_18_(__Stack0) ->
 -compile({inline,yeccpars2_19_/1}).
 -dialyzer({nowarn_function, yeccpars2_19_/1}).
 -compile({nowarn_unused_function,  yeccpars2_19_/1}).
--file("src/leetlang_parser.yrl", 85).
+-file("src/leetlang_parser.yrl", 88).
 yeccpars2_19_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1964,7 +1977,7 @@ yeccpars2_19_(__Stack0) ->
 -compile({inline,yeccpars2_20_/1}).
 -dialyzer({nowarn_function, yeccpars2_20_/1}).
 -compile({nowarn_unused_function,  yeccpars2_20_/1}).
--file("src/leetlang_parser.yrl", 88).
+-file("src/leetlang_parser.yrl", 91).
 yeccpars2_20_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1974,7 +1987,7 @@ yeccpars2_20_(__Stack0) ->
 -compile({inline,yeccpars2_23_/1}).
 -dialyzer({nowarn_function, yeccpars2_23_/1}).
 -compile({nowarn_unused_function,  yeccpars2_23_/1}).
--file("src/leetlang_parser.yrl", 80).
+-file("src/leetlang_parser.yrl", 83).
 yeccpars2_23_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1984,7 +1997,7 @@ yeccpars2_23_(__Stack0) ->
 -compile({inline,yeccpars2_24_/1}).
 -dialyzer({nowarn_function, yeccpars2_24_/1}).
 -compile({nowarn_unused_function,  yeccpars2_24_/1}).
--file("src/leetlang_parser.yrl", 81).
+-file("src/leetlang_parser.yrl", 84).
 yeccpars2_24_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -1994,7 +2007,7 @@ yeccpars2_24_(__Stack0) ->
 -compile({inline,yeccpars2_25_/1}).
 -dialyzer({nowarn_function, yeccpars2_25_/1}).
 -compile({nowarn_unused_function,  yeccpars2_25_/1}).
--file("src/leetlang_parser.yrl", 93).
+-file("src/leetlang_parser.yrl", 96).
 yeccpars2_25_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2004,7 +2017,7 @@ yeccpars2_25_(__Stack0) ->
 -compile({inline,yeccpars2_27_/1}).
 -dialyzer({nowarn_function, yeccpars2_27_/1}).
 -compile({nowarn_unused_function,  yeccpars2_27_/1}).
--file("src/leetlang_parser.yrl", 92).
+-file("src/leetlang_parser.yrl", 95).
 yeccpars2_27_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2014,7 +2027,7 @@ yeccpars2_27_(__Stack0) ->
 -compile({inline,yeccpars2_28_/1}).
 -dialyzer({nowarn_function, yeccpars2_28_/1}).
 -compile({nowarn_unused_function,  yeccpars2_28_/1}).
--file("src/leetlang_parser.yrl", 90).
+-file("src/leetlang_parser.yrl", 93).
 yeccpars2_28_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2024,7 +2037,7 @@ yeccpars2_28_(__Stack0) ->
 -compile({inline,yeccpars2_31_/1}).
 -dialyzer({nowarn_function, yeccpars2_31_/1}).
 -compile({nowarn_unused_function,  yeccpars2_31_/1}).
--file("src/leetlang_parser.yrl", 91).
+-file("src/leetlang_parser.yrl", 94).
 yeccpars2_31_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2034,7 +2047,7 @@ yeccpars2_31_(__Stack0) ->
 -compile({inline,yeccpars2_32_/1}).
 -dialyzer({nowarn_function, yeccpars2_32_/1}).
 -compile({nowarn_unused_function,  yeccpars2_32_/1}).
--file("src/leetlang_parser.yrl", 82).
+-file("src/leetlang_parser.yrl", 85).
 yeccpars2_32_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2044,7 +2057,7 @@ yeccpars2_32_(__Stack0) ->
 -compile({inline,yeccpars2_41_/1}).
 -dialyzer({nowarn_function, yeccpars2_41_/1}).
 -compile({nowarn_unused_function,  yeccpars2_41_/1}).
--file("src/leetlang_parser.yrl", 72).
+-file("src/leetlang_parser.yrl", 75).
 yeccpars2_41_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2054,7 +2067,7 @@ yeccpars2_41_(__Stack0) ->
 -compile({inline,yeccpars2_46_/1}).
 -dialyzer({nowarn_function, yeccpars2_46_/1}).
 -compile({nowarn_unused_function,  yeccpars2_46_/1}).
--file("src/leetlang_parser.yrl", 76).
+-file("src/leetlang_parser.yrl", 79).
 yeccpars2_46_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2064,7 +2077,7 @@ yeccpars2_46_(__Stack0) ->
 -compile({inline,yeccpars2_47_/1}).
 -dialyzer({nowarn_function, yeccpars2_47_/1}).
 -compile({nowarn_unused_function,  yeccpars2_47_/1}).
--file("src/leetlang_parser.yrl", 77).
+-file("src/leetlang_parser.yrl", 80).
 yeccpars2_47_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2074,7 +2087,7 @@ yeccpars2_47_(__Stack0) ->
 -compile({inline,yeccpars2_48_/1}).
 -dialyzer({nowarn_function, yeccpars2_48_/1}).
 -compile({nowarn_unused_function,  yeccpars2_48_/1}).
--file("src/leetlang_parser.yrl", 97).
+-file("src/leetlang_parser.yrl", 100).
 yeccpars2_48_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2084,7 +2097,7 @@ yeccpars2_48_(__Stack0) ->
 -compile({inline,yeccpars2_49_/1}).
 -dialyzer({nowarn_function, yeccpars2_49_/1}).
 -compile({nowarn_unused_function,  yeccpars2_49_/1}).
--file("src/leetlang_parser.yrl", 73).
+-file("src/leetlang_parser.yrl", 76).
 yeccpars2_49_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2094,7 +2107,7 @@ yeccpars2_49_(__Stack0) ->
 -compile({inline,yeccpars2_50_/1}).
 -dialyzer({nowarn_function, yeccpars2_50_/1}).
 -compile({nowarn_unused_function,  yeccpars2_50_/1}).
--file("src/leetlang_parser.yrl", 101).
+-file("src/leetlang_parser.yrl", 104).
 yeccpars2_50_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2104,7 +2117,7 @@ yeccpars2_50_(__Stack0) ->
 -compile({inline,yeccpars2_51_/1}).
 -dialyzer({nowarn_function, yeccpars2_51_/1}).
 -compile({nowarn_unused_function,  yeccpars2_51_/1}).
--file("src/leetlang_parser.yrl", 99).
+-file("src/leetlang_parser.yrl", 102).
 yeccpars2_51_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2114,7 +2127,7 @@ yeccpars2_51_(__Stack0) ->
 -compile({inline,yeccpars2_52_/1}).
 -dialyzer({nowarn_function, yeccpars2_52_/1}).
 -compile({nowarn_unused_function,  yeccpars2_52_/1}).
--file("src/leetlang_parser.yrl", 100).
+-file("src/leetlang_parser.yrl", 103).
 yeccpars2_52_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2124,7 +2137,7 @@ yeccpars2_52_(__Stack0) ->
 -compile({inline,yeccpars2_53_/1}).
 -dialyzer({nowarn_function, yeccpars2_53_/1}).
 -compile({nowarn_unused_function,  yeccpars2_53_/1}).
--file("src/leetlang_parser.yrl", 98).
+-file("src/leetlang_parser.yrl", 101).
 yeccpars2_53_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2134,7 +2147,7 @@ yeccpars2_53_(__Stack0) ->
 -compile({inline,yeccpars2_54_/1}).
 -dialyzer({nowarn_function, yeccpars2_54_/1}).
 -compile({nowarn_unused_function,  yeccpars2_54_/1}).
--file("src/leetlang_parser.yrl", 96).
+-file("src/leetlang_parser.yrl", 99).
 yeccpars2_54_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2144,7 +2157,7 @@ yeccpars2_54_(__Stack0) ->
 -compile({inline,yeccpars2_57_/1}).
 -dialyzer({nowarn_function, yeccpars2_57_/1}).
 -compile({nowarn_unused_function,  yeccpars2_57_/1}).
--file("src/leetlang_parser.yrl", 42).
+-file("src/leetlang_parser.yrl", 45).
 yeccpars2_57_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2154,7 +2167,7 @@ yeccpars2_57_(__Stack0) ->
 -compile({inline,yeccpars2_59_/1}).
 -dialyzer({nowarn_function, yeccpars2_59_/1}).
 -compile({nowarn_unused_function,  yeccpars2_59_/1}).
--file("src/leetlang_parser.yrl", 39).
+-file("src/leetlang_parser.yrl", 42).
 yeccpars2_59_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2164,7 +2177,7 @@ yeccpars2_59_(__Stack0) ->
 -compile({inline,yeccpars2_67_/1}).
 -dialyzer({nowarn_function, yeccpars2_67_/1}).
 -compile({nowarn_unused_function,  yeccpars2_67_/1}).
--file("src/leetlang_parser.yrl", 45).
+-file("src/leetlang_parser.yrl", 48).
 yeccpars2_67_(__Stack0) ->
  [___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2174,7 +2187,7 @@ yeccpars2_67_(__Stack0) ->
 -compile({inline,yeccpars2_73_/1}).
 -dialyzer({nowarn_function, yeccpars2_73_/1}).
 -compile({nowarn_unused_function,  yeccpars2_73_/1}).
--file("src/leetlang_parser.yrl", 44).
+-file("src/leetlang_parser.yrl", 47).
 yeccpars2_73_(__Stack0) ->
  [___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2184,7 +2197,7 @@ yeccpars2_73_(__Stack0) ->
 -compile({inline,yeccpars2_77_/1}).
 -dialyzer({nowarn_function, yeccpars2_77_/1}).
 -compile({nowarn_unused_function,  yeccpars2_77_/1}).
--file("src/leetlang_parser.yrl", 43).
+-file("src/leetlang_parser.yrl", 46).
 yeccpars2_77_(__Stack0) ->
  [___11,___10,___9,___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2194,7 +2207,7 @@ yeccpars2_77_(__Stack0) ->
 -compile({inline,yeccpars2_78_/1}).
 -dialyzer({nowarn_function, yeccpars2_78_/1}).
 -compile({nowarn_unused_function,  yeccpars2_78_/1}).
--file("src/leetlang_parser.yrl", 38).
+-file("src/leetlang_parser.yrl", 41).
 yeccpars2_78_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2204,7 +2217,7 @@ yeccpars2_78_(__Stack0) ->
 -compile({inline,yeccpars2_79_/1}).
 -dialyzer({nowarn_function, yeccpars2_79_/1}).
 -compile({nowarn_unused_function,  yeccpars2_79_/1}).
--file("src/leetlang_parser.yrl", 25).
+-file("src/leetlang_parser.yrl", 27).
 yeccpars2_79_(__Stack0) ->
  [___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2214,7 +2227,7 @@ yeccpars2_79_(__Stack0) ->
 -compile({inline,yeccpars2_81_/1}).
 -dialyzer({nowarn_function, yeccpars2_81_/1}).
 -compile({nowarn_unused_function,  yeccpars2_81_/1}).
--file("src/leetlang_parser.yrl", 87).
+-file("src/leetlang_parser.yrl", 90).
 yeccpars2_81_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2224,7 +2237,7 @@ yeccpars2_81_(__Stack0) ->
 -compile({inline,yeccpars2_83_/1}).
 -dialyzer({nowarn_function, yeccpars2_83_/1}).
 -compile({nowarn_unused_function,  yeccpars2_83_/1}).
--file("src/leetlang_parser.yrl", 84).
+-file("src/leetlang_parser.yrl", 87).
 yeccpars2_83_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2234,7 +2247,7 @@ yeccpars2_83_(__Stack0) ->
 -compile({inline,yeccpars2_86_/1}).
 -dialyzer({nowarn_function, yeccpars2_86_/1}).
 -compile({nowarn_unused_function,  yeccpars2_86_/1}).
--file("src/leetlang_parser.yrl", 27).
+-file("src/leetlang_parser.yrl", 29).
 yeccpars2_86_(__Stack0) ->
  [___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2244,7 +2257,7 @@ yeccpars2_86_(__Stack0) ->
 -compile({inline,yeccpars2_87_/1}).
 -dialyzer({nowarn_function, yeccpars2_87_/1}).
 -compile({nowarn_unused_function,  yeccpars2_87_/1}).
--file("src/leetlang_parser.yrl", 61).
+-file("src/leetlang_parser.yrl", 64).
 yeccpars2_87_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2254,7 +2267,7 @@ yeccpars2_87_(__Stack0) ->
 -compile({inline,yeccpars2_88_/1}).
 -dialyzer({nowarn_function, yeccpars2_88_/1}).
 -compile({nowarn_unused_function,  yeccpars2_88_/1}).
--file("src/leetlang_parser.yrl", 63).
+-file("src/leetlang_parser.yrl", 66).
 yeccpars2_88_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2264,7 +2277,7 @@ yeccpars2_88_(__Stack0) ->
 -compile({inline,yeccpars2_89_/1}).
 -dialyzer({nowarn_function, yeccpars2_89_/1}).
 -compile({nowarn_unused_function,  yeccpars2_89_/1}).
--file("src/leetlang_parser.yrl", 62).
+-file("src/leetlang_parser.yrl", 65).
 yeccpars2_89_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2274,7 +2287,7 @@ yeccpars2_89_(__Stack0) ->
 -compile({inline,yeccpars2_90_/1}).
 -dialyzer({nowarn_function, yeccpars2_90_/1}).
 -compile({nowarn_unused_function,  yeccpars2_90_/1}).
--file("src/leetlang_parser.yrl", 80).
+-file("src/leetlang_parser.yrl", 83).
 yeccpars2_90_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2284,7 +2297,7 @@ yeccpars2_90_(__Stack0) ->
 -compile({inline,yeccpars2_93_/1}).
 -dialyzer({nowarn_function, yeccpars2_93_/1}).
 -compile({nowarn_unused_function,  yeccpars2_93_/1}).
--file("src/leetlang_parser.yrl", 70).
+-file("src/leetlang_parser.yrl", 73).
 yeccpars2_93_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2294,7 +2307,7 @@ yeccpars2_93_(__Stack0) ->
 -compile({inline,yeccpars2_95_/1}).
 -dialyzer({nowarn_function, yeccpars2_95_/1}).
 -compile({nowarn_unused_function,  yeccpars2_95_/1}).
--file("src/leetlang_parser.yrl", 68).
+-file("src/leetlang_parser.yrl", 71).
 yeccpars2_95_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2304,7 +2317,7 @@ yeccpars2_95_(__Stack0) ->
 -compile({inline,yeccpars2_96_/1}).
 -dialyzer({nowarn_function, yeccpars2_96_/1}).
 -compile({nowarn_unused_function,  yeccpars2_96_/1}).
--file("src/leetlang_parser.yrl", 66).
+-file("src/leetlang_parser.yrl", 69).
 yeccpars2_96_(__Stack0) ->
  [___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2314,7 +2327,7 @@ yeccpars2_96_(__Stack0) ->
 -compile({inline,yeccpars2_97_/1}).
 -dialyzer({nowarn_function, yeccpars2_97_/1}).
 -compile({nowarn_unused_function,  yeccpars2_97_/1}).
--file("src/leetlang_parser.yrl", 69).
+-file("src/leetlang_parser.yrl", 72).
 yeccpars2_97_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2324,7 +2337,7 @@ yeccpars2_97_(__Stack0) ->
 -compile({inline,yeccpars2_98_/1}).
 -dialyzer({nowarn_function, yeccpars2_98_/1}).
 -compile({nowarn_unused_function,  yeccpars2_98_/1}).
--file("src/leetlang_parser.yrl", 65).
+-file("src/leetlang_parser.yrl", 68).
 yeccpars2_98_(__Stack0) ->
  [___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2334,7 +2347,7 @@ yeccpars2_98_(__Stack0) ->
 -compile({inline,yeccpars2_101_/1}).
 -dialyzer({nowarn_function, yeccpars2_101_/1}).
 -compile({nowarn_unused_function,  yeccpars2_101_/1}).
--file("src/leetlang_parser.yrl", 29).
+-file("src/leetlang_parser.yrl", 31).
 yeccpars2_101_(__Stack0) ->
  [___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2344,7 +2357,7 @@ yeccpars2_101_(__Stack0) ->
 -compile({inline,yeccpars2_103_/1}).
 -dialyzer({nowarn_function, yeccpars2_103_/1}).
 -compile({nowarn_unused_function,  yeccpars2_103_/1}).
--file("src/leetlang_parser.yrl", 47).
+-file("src/leetlang_parser.yrl", 50).
 yeccpars2_103_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2354,7 +2367,7 @@ yeccpars2_103_(__Stack0) ->
 -compile({inline,yeccpars2_107_/1}).
 -dialyzer({nowarn_function, yeccpars2_107_/1}).
 -compile({nowarn_unused_function,  yeccpars2_107_/1}).
--file("src/leetlang_parser.yrl", 52).
+-file("src/leetlang_parser.yrl", 55).
 yeccpars2_107_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2364,7 +2377,7 @@ yeccpars2_107_(__Stack0) ->
 -compile({inline,yeccpars2_109_/1}).
 -dialyzer({nowarn_function, yeccpars2_109_/1}).
 -compile({nowarn_unused_function,  yeccpars2_109_/1}).
--file("src/leetlang_parser.yrl", 57).
+-file("src/leetlang_parser.yrl", 60).
 yeccpars2_109_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2374,7 +2387,7 @@ yeccpars2_109_(__Stack0) ->
 -compile({inline,yeccpars2_111_/1}).
 -dialyzer({nowarn_function, yeccpars2_111_/1}).
 -compile({nowarn_unused_function,  yeccpars2_111_/1}).
--file("src/leetlang_parser.yrl", 55).
+-file("src/leetlang_parser.yrl", 58).
 yeccpars2_111_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2384,7 +2397,7 @@ yeccpars2_111_(__Stack0) ->
 -compile({inline,yeccpars2_112_/1}).
 -dialyzer({nowarn_function, yeccpars2_112_/1}).
 -compile({nowarn_unused_function,  yeccpars2_112_/1}).
--file("src/leetlang_parser.yrl", 54).
+-file("src/leetlang_parser.yrl", 57).
 yeccpars2_112_(__Stack0) ->
  [___1 | __Stack] = __Stack0,
  [begin
@@ -2394,7 +2407,7 @@ yeccpars2_112_(__Stack0) ->
 -compile({inline,yeccpars2_117_/1}).
 -dialyzer({nowarn_function, yeccpars2_117_/1}).
 -compile({nowarn_unused_function,  yeccpars2_117_/1}).
--file("src/leetlang_parser.yrl", 36).
+-file("src/leetlang_parser.yrl", 39).
 yeccpars2_117_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2404,7 +2417,7 @@ yeccpars2_117_(__Stack0) ->
 -compile({inline,yeccpars2_119_/1}).
 -dialyzer({nowarn_function, yeccpars2_119_/1}).
 -compile({nowarn_unused_function,  yeccpars2_119_/1}).
--file("src/leetlang_parser.yrl", 33).
+-file("src/leetlang_parser.yrl", 35).
 yeccpars2_119_(__Stack0) ->
  [___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2414,7 +2427,7 @@ yeccpars2_119_(__Stack0) ->
 -compile({inline,yeccpars2_120_/1}).
 -dialyzer({nowarn_function, yeccpars2_120_/1}).
 -compile({nowarn_unused_function,  yeccpars2_120_/1}).
--file("src/leetlang_parser.yrl", 34).
+-file("src/leetlang_parser.yrl", 36).
 yeccpars2_120_(__Stack0) ->
  [___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2424,7 +2437,7 @@ yeccpars2_120_(__Stack0) ->
 -compile({inline,yeccpars2_122_/1}).
 -dialyzer({nowarn_function, yeccpars2_122_/1}).
 -compile({nowarn_unused_function,  yeccpars2_122_/1}).
--file("src/leetlang_parser.yrl", 50).
+-file("src/leetlang_parser.yrl", 53).
 yeccpars2_122_(__Stack0) ->
  [___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2434,7 +2447,7 @@ yeccpars2_122_(__Stack0) ->
 -compile({inline,yeccpars2_130_/1}).
 -dialyzer({nowarn_function, yeccpars2_130_/1}).
 -compile({nowarn_unused_function,  yeccpars2_130_/1}).
--file("src/leetlang_parser.yrl", 32).
+-file("src/leetlang_parser.yrl", 34).
 yeccpars2_130_(__Stack0) ->
  [___9,___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2444,7 +2457,7 @@ yeccpars2_130_(__Stack0) ->
 -compile({inline,yeccpars2_131_/1}).
 -dialyzer({nowarn_function, yeccpars2_131_/1}).
 -compile({nowarn_unused_function,  yeccpars2_131_/1}).
--file("src/leetlang_parser.yrl", 31).
+-file("src/leetlang_parser.yrl", 33).
 yeccpars2_131_(__Stack0) ->
  [___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2454,7 +2467,7 @@ yeccpars2_131_(__Stack0) ->
 -compile({inline,yeccpars2_132_/1}).
 -dialyzer({nowarn_function, yeccpars2_132_/1}).
 -compile({nowarn_unused_function,  yeccpars2_132_/1}).
--file("src/leetlang_parser.yrl", 48).
+-file("src/leetlang_parser.yrl", 51).
 yeccpars2_132_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2464,7 +2477,7 @@ yeccpars2_132_(__Stack0) ->
 -compile({inline,yeccpars2_138_/1}).
 -dialyzer({nowarn_function, yeccpars2_138_/1}).
 -compile({nowarn_unused_function,  yeccpars2_138_/1}).
--file("src/leetlang_parser.yrl", 23).
+-file("src/leetlang_parser.yrl", 25).
 yeccpars2_138_(__Stack0) ->
  [___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2474,7 +2487,7 @@ yeccpars2_138_(__Stack0) ->
 -compile({inline,yeccpars2_142_/1}).
 -dialyzer({nowarn_function, yeccpars2_142_/1}).
 -compile({nowarn_unused_function,  yeccpars2_142_/1}).
--file("src/leetlang_parser.yrl", 21).
+-file("src/leetlang_parser.yrl", 23).
 yeccpars2_142_(__Stack0) ->
  [___11,___10,___9,___8,___7,___6,___5,___4,___3,___2,___1 | __Stack] = __Stack0,
  [begin
@@ -2494,11 +2507,21 @@ yeccpars2_143_(__Stack0) ->
 -compile({inline,yeccpars2_144_/1}).
 -dialyzer({nowarn_function, yeccpars2_144_/1}).
 -compile({nowarn_unused_function,  yeccpars2_144_/1}).
--file("src/leetlang_parser.yrl", 13).
+-file("src/leetlang_parser.yrl", 15).
 yeccpars2_144_(__Stack0) ->
  [___2,___1 | __Stack] = __Stack0,
  [begin
                                             {'program_lines', ___1, ___2}
+  end | __Stack].
+
+-compile({inline,yeccpars2_145_/1}).
+-dialyzer({nowarn_function, yeccpars2_145_/1}).
+-compile({nowarn_unused_function,  yeccpars2_145_/1}).
+-file("src/leetlang_parser.yrl", 13).
+yeccpars2_145_(__Stack0) ->
+ [___2,___1 | __Stack] = __Stack0,
+ [begin
+                                      {'program_body', ___1, ___2}
   end | __Stack].
 
 

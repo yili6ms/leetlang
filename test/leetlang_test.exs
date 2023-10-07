@@ -212,4 +212,39 @@ defmodule LeetlangTest do
     env_map = AstDriver.Astdriver.execute_program(input)
     assert Map.get(env_map, "ans") == 55
   end
+
+  @tag :ast_driver_test_function_fib_with_return
+  test "simple ast driver test func rec2" do
+    input = ~c"program abc {
+      let_fn fib = (n -> int) -> int {
+        let c = 1
+        if (n >= 3) {
+          let a =  fib.(n-1)
+          let b = fib.(n-2)
+          let c = a + b
+        }
+        return c
+      }
+
+      let ans = fib.(10)
+      return ans
+
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert env_map == 55
+  end
+
+  @tag :ast_driver_test_shadow
+  test "simple ast driver test func shadowing" do
+    input = ~c"program abc {
+      let a = 1
+      let b = 2
+      let a = a + b
+      let a = true
+      return a
+
+    }"
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert env_map == true
+  end
 end

@@ -1,5 +1,5 @@
 Nonterminals Program Prg_name ProgramBody ProgramLines ProgramLine Let_stmt Val_expr FuncLine FuncLines
-Val_expr_all FuncReturn  RetStmt Call_ParamList Call_Param Val_expr1 Val_expr2 Variant Term Factor BoolExpr BoolTerm BoolFactor CmpExpr Func_def Let_fn_stmt ParaList RetType Param Formalization Type. 
+Val_expr_all FuncReturn RetStmt Call_ParamList Call_Param Val_expr1 Val_expr2 Variant Term Factor BoolExpr BoolTerm BoolFactor CmpExpr Func_def Let_fn_stmt ParaList RetType Param Formalization Type. 
 
 Terminals eq  ne  assign  ge  le  gt  lt  '{'  '}'  '('  ')'  
 and_sym  or_sym  not_sym fn_sym plus_sym  minus_sym  mult_sym  div_sym arrow_sym 
@@ -12,7 +12,9 @@ Program -> program_sym Prg_name '{' ProgramBody '}' : {'program', '$2', '$4'}.
 
 Prg_name -> chars : {'prg_name', '$1'}.
 
-ProgramBody -> ProgramLines : {'program_body', '$1'}.
+ProgramBody -> ProgramLines  : {'program_body', '$1'}.
+
+ProgramBody -> ProgramLines RetStmt : {'program_body', '$1', '$2'}.
 
 ProgramLines -> ProgramLine ProgramLines  : {'program_lines', '$1', '$2'}.
 
@@ -36,6 +38,7 @@ Func_def -> '(' ParaList ')' arrow_sym RetType '{' RetStmt '}' : {'func_def1', '
 Func_def -> '(' ParaList ')' arrow_sym RetType '{' FuncLines RetStmt'}' : {'func_def2', '$2', '$5', '$7', '$8'}.
 Func_def -> '(' ')' arrow_sym RetType '{' FuncLines RetStmt '}' : {'func_def_no_parm2', '$4', '$6', '$7'}.
 Func_def -> '(' ')' arrow_sym RetType '{' RetStmt '}' : {'func_def_no_parm1', '$4', '$6'}.
+
 
 RetStmt -> return_sym Val_expr_all : {'ret_stmt', '$2'}.
 
