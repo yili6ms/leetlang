@@ -250,9 +250,12 @@ defmodule LeetlangTest do
   @tag :ast_driver_test_array
   test "simple ast driver test array" do
     input = ~c"program abc {
-      let a = [1,2,3] ++ [4,5,6]
+      let a = [1,2,3] ++ [4,5,6] ++ [7,8,9]
+      let b = :a -- [3,6,9]
+      return b
     }"
-    env_map = AstDriver.Astdriver.execute_program(input) |> IO.inspect()
+    env_map = AstDriver.Astdriver.execute_program(input)
+    assert env_map == [1,2,4,5,7,8]
   end
 
   @tag :ast_driver_test_array2
