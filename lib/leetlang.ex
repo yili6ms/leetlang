@@ -1,18 +1,17 @@
 defmodule Leetlang do
-  @moduledoc """
-  Documentation for `Leetlang`.
-  """
+  alias LeetLang.Runner
+  def main(_) do
+    parsed =
+      System.argv()
+      |> OptionParser.parse(strict: [source: :string])
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Leetlang.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    with {_, [path], []} <- parsed do
+      Runner.run_code(path)
+    else
+      _ ->
+        IO.inspect("not supported...")
+        System.halt(1)
+    end
   end
+
 end

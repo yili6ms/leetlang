@@ -15,10 +15,8 @@ defmodule AstDriver.Astdriver do
   def execute_ast({name, pgname, pgbody}, current_env) when name == :program do
     IO.inspect("starting executing program #{eval_str(pgname, %{})}")
     ret = execute_ast(pgbody, current_env)
-    IO.inspect("environment table:")
-
+    #IO.inspect("environment table:")
     ret
-    |> IO.inspect()
   end
 
   def execute_ast({name, program_body}, current_env) when name == :program_body do
@@ -306,7 +304,6 @@ defmodule AstDriver.Astdriver do
       |> Enum.reduce(%{}, fn {k, v}, acc -> Map.put(acc, k, v) end)
 
     new_env3 = execute_ast(func_lines, Map.merge(current_env, new_env))
-    IO.inspect(new_env3)
     eval_expr(ret_stmt, new_env3)
   end
 
@@ -317,7 +314,6 @@ defmodule AstDriver.Astdriver do
   def eval_func({name, ret_type, func_lines, ret_stmt}, arity, current_env)
       when name == :func_def_no_parm2 do
     new_env = execute_ast(func_lines, current_env)
-    IO.inspect(new_env)
     eval_expr(ret_stmt, new_env)
   end
 

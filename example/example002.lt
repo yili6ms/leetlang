@@ -1,0 +1,20 @@
+program abc
+{
+  let_fn fib = (n -> int) -> int {
+    let c = 1
+    if (n >= 3) {
+      let a =  fib.(n-1)
+      let b = fib.(n-2)
+      let c = a + b
+    }
+    return c
+  }
+  let a = []
+  let cnt = 0
+  while (cnt < 10)
+  {
+    let cnt = cnt + 1
+    let a = :a ++ [fib.(cnt)]
+  }
+  return a
+}
